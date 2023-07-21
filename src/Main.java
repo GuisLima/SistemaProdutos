@@ -1,10 +1,14 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.List;
 
+import db.ProdutoDb;
 import sistema.Produtos;
 
 public class Main {
+
+    static ProdutoDb produtosdb = new ProdutoDb();
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -14,6 +18,7 @@ public class Main {
 
         do {
             System.out.println("1 - Cadastrar produto");
+            System.out.println("2 - Listar produtos cadastrados");
             System.out.println("0 - Sair");
 
             System.out.print("Qual operação você deseja realizar: ");
@@ -46,12 +51,24 @@ public class Main {
                 Date dataValidade = new SimpleDateFormat("dd/MM/yyyy").parse(dataString);
 
                 Produtos newProduct = new Produtos(id, descricao, preco, dataValidade);
-                System.out.println("Produto Criado com Sucesso!");
-                System.out.println("ID: " + newProduct.getId());
-                System.out.println("Descrição: " + newProduct.getDescricao());
-                System.out.println("Preço: " + newProduct.getPreco());
-                System.out.println("Data de validade: " + newProduct.getDataValidade());
-                System.out.println("--------------------------------");
+
+                produtosdb.addNovoProduto(newProduct);
+
+                break;
+            }
+
+            case 2: {
+                List<Produtos> listaDeProdutos = produtosdb.getProdutosList();
+
+                for(Produtos produtos : listaDeProdutos) {
+                    System.out.println("--- ID: " + produtos.getId());
+                    System.out.println("--- Descrição: " + produtos.getDescricao());
+                    System.out.println("--- Preço: " + produtos.getPreco());
+                    System.out.println("--- Validade: " + produtos.getDataValidade());
+                    System.out.println("----------------------------------------");
+                }
+
+                break;
             }
         }
     }
